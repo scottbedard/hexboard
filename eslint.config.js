@@ -51,14 +51,17 @@ export default ts.config(
         ],
       }],
       'vue/multi-word-component-names': 'off',
+      'vue/v-bind-style': ['error', 'shorthand', {
+        sameNameShorthand: 'always',
+      }],
     },
   },
   {
     files: ['src/lib/components/hexboard/pieces/*.vue'],
     rules: {
-      'vue/multi-word-component-names': 'off',
       'vue/attributes-order': 'off',
       'vue/max-attributes-per-line': 'off',
+      'vue/multi-word-component-names': 'off',
     },
   },
   {
