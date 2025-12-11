@@ -1,8 +1,8 @@
 <template>
   <div>
     <svg
-      ref="svgEl"
       xmlns="http://www.w3.org/2000/svg"
+      ref="svgEl"
       :style="{ cursor }"
       :viewBox="`0 0 ${box} ${box}`"
     >
@@ -23,30 +23,30 @@
           onPointerdown: evt => onPointerdownPosition(index, evt),
           onPointerup: evt => onPointerupPosition(index, evt),
         } : {}"
-        :key="index"
         :d="d(flipped ? pos[4] : pos[3])"
         :data-hexboard-position="index"
         :data-testid="`position-${indexToPosition(index)}`"
         :fill="normalizedOptions.colors[board[index][0]]"
+        :key="index"
       />
 
       <!-- highlighted positions -->
       <path
         v-for="highlightIndex in highlight"
-        :key="`highlight-${highlightIndex}`"
         :d="d(flipped ? board[highlightIndex][4] : board[highlightIndex][3])"
         :data-testid="`highlight-${indexToPosition(highlightIndex)}`"
         :fill="normalizedOptions.highlightColor"
+        :key="`highlight-${highlightIndex}`"
         :style="{ pointerEvents: 'none' }"
       />
 
       <!-- selected position -->
       <path
         v-if="typeof currentSelected === 'number'"
-        ref="selectedEl"
         :d="d(flipped ? board[currentSelected][4] : board[currentSelected][3])"
         :data-testid="`selected-${indexToPosition(currentSelected)}`"
         :fill="normalizedOptions.selectedColor"
+        ref="selectedEl"
         :style="{ pointerEvents: 'none' }"
       />
 
@@ -55,10 +55,10 @@
         <text
           v-for="[text, p, positionFlipped], i in labels"
           v-text="text"
-          :key="`label-${i}`"
           dominant-baseline="central"
           text-anchor="middle"
           :data-testid="`label-${text}`"
+          :key="`label-${i}`"
           :style="{
             fill: getLabelFill(text),
             fontSize: '.5px',
@@ -90,11 +90,11 @@
       <!-- targets -->
       <circle
         v-for="targetIndex in currentTargets"
-        :key="`target-${indexToPosition(targetIndex)}`"
         :cx="x(board[targetIndex][flipped ? 2 : 1][0])"
         :cy="y(board[targetIndex][flipped ? 2 : 1][1])"
         :data-testid="`target-${indexToPosition(targetIndex)}`"
         :fill="normalizedOptions.targetColor"
+        :key="`target-${indexToPosition(targetIndex)}`"
         :r="0.3"
         :style="{ pointerEvents: 'none' }"
       />
@@ -118,8 +118,8 @@
       :viewBox="`0 0 ${box} ${box}`"
     >
       <Component
-        :is="pieces"
         :height="pieceSize"
+        :is="pieces"
         :style="{ pointerEvents: 'none' }"
         :type="dragPiece"
         :width="pieceSize"
