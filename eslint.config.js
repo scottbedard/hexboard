@@ -39,6 +39,7 @@ export default ts.config(
             'OTHER_DIRECTIVES',
           ],
           [
+            'ATTR_SHORTHAND_BOOL',
             'ATTR_STATIC',
             'GLOBAL',
           ],

@@ -1,9 +1,9 @@
 <template>
   <div>
     <Hexboard
-      class="max-w-screen-sm mx-auto"
       active
       autoselect
+      class="max-w-screen-sm mx-auto"
       ignore-turn
       :hexchess
       :playing="true"
