@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Hexboard />
+    <Hexboard foo="1" bar="2" />
   </div>
 </template>
 
