@@ -16,26 +16,26 @@ export default defineConfig({
       name: '@bedard/hexboard',
     },
     rollupOptions: {
-      external: ['@bedard/hexchess', 'vue']
-    }
+      external: ['@bedard/hexchess', 'vue'],
+    },
   },
   plugins: [
     dts({
       include: ['src/**/*'],
       outDir: 'dist',
-      rollupTypes: true
+      rollupTypes: true,
     }),
     tailwindcss(),
     vue(),
   ],
   resolve: {
     alias: {
-      'lib': resolve(__dirname, 'src/lib'),
-      'sandbox': resolve(__dirname, 'src/sandbox'),
+      lib: resolve(__dirname, 'src/lib'),
+      sandbox: resolve(__dirname, 'src/sandbox'),
     },
   },
   server: {
     open: true,
     port: 3000,
-  }
+  },
 })

@@ -155,7 +155,7 @@ export const board: [
   origin: Vec<2>,
   reflectedOrigin: Vec<2>,
   path: Vec<6, Vec<2>>,
-  reflectedPath: Vec<6, Vec<2>>
+  reflectedPath: Vec<6, Vec<2>>,
 ][] = [
   [2, f11, reflect(f11), hexagon(f11), flip(hexagon(f11))],
   [1, e10, reflect(e10), hexagon(e10), flip(hexagon(e10))],

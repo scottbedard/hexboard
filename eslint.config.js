@@ -1,12 +1,14 @@
+import globals from 'globals'
 import js from '@eslint/js'
+import stylistic from '@stylistic/eslint-plugin'
 import ts from 'typescript-eslint'
 import vue from 'eslint-plugin-vue'
-import globals from 'globals'
 
 export default ts.config(
   js.configs.recommended,
   ...ts.configs.recommended,
   ...vue.configs['flat/recommended'],
+  stylistic.configs.recommended,
   {
     languageOptions: {
       globals: globals.browser,
@@ -43,4 +45,3 @@ export default ts.config(
     ignores: ['dist/', 'dist-sandbox/', 'node_modules/'],
   },
 )
-

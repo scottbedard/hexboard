@@ -1,4 +1,3 @@
-
 <template>
   <svg
     v-if="type === 'p'"

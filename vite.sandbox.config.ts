@@ -16,9 +16,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      'lib': resolve(__dirname, 'src/lib'),
-      'sandbox': resolve(__dirname, 'src/sandbox'),
+      lib: resolve(__dirname, 'src/lib'),
+      sandbox: resolve(__dirname, 'src/sandbox'),
     },
   },
 })
-
