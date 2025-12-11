@@ -1,9 +1,9 @@
 <template>
   <div>
-    Hello from the sandbox
+    <Hexboard />
   </div>
 </template>
 
 <script setup lang="ts">
-// ...
+import { Hexboard } from 'lib/index'
 </script>

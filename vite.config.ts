@@ -8,6 +8,17 @@ import vue from '@vitejs/plugin-vue'
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 export default defineConfig({
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'src/lib/index.ts'),
+      fileName: 'index',
+      formats: ['es'],
+      name: '@bedard/hexboard',
+    },
+    rollupOptions: {
+      external: ['@bedard/hexchess', 'vue']
+    }
+  },
   plugins: [
     dts({
       include: ['src/**/*'],
@@ -17,19 +28,14 @@ export default defineConfig({
     tailwindcss(),
     vue(),
   ],
-  build: {
-    lib: {
-      entry: resolve(__dirname, 'src/lib/index.ts'),
-      name: '@bedard/hexboard',
-      fileName: 'index',
-      formats: ['es']
+  resolve: {
+    alias: {
+      'lib': resolve(__dirname, 'src/lib'),
+      'sandbox': resolve(__dirname, 'src/sandbox'),
     },
-    rollupOptions: {
-      external: ['@bedard/hexchess', 'vue']
-    }
   },
   server: {
+    open: true,
     port: 3000,
-    open: true
   }
 })
