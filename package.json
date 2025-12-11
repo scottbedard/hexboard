@@ -1,0 +1,12 @@
+{
+  "author": "Scott Bedard",
+  "description": "Component library for hexchess.club",
+  "keywords": ["hexchess"],
+  "main": "index.js",
+  "name": "@bedard/hexboard",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "version": "0.0.1"
+}
