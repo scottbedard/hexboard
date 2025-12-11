@@ -4,7 +4,8 @@
       ref="svgEl"
       xmlns="http://www.w3.org/2000/svg"
       :style="{ cursor }"
-      :viewBox="`0 0 ${box} ${box}`">
+      :viewBox="`0 0 ${box} ${box}`"
+    >
       <!-- backdrop -->
       <path
         :d="d(perimeter)"
@@ -14,7 +15,7 @@
 
       <!-- positions -->
       <path
-        v-for="position, index in board"
+        v-for="pos, index in board"
         v-bind="active ? {
           onClick: evt => onClickPosition(index, evt),
           onMouseenter: () => onMouseenter(index),
@@ -22,11 +23,11 @@
           onPointerdown: evt => onPointerdownPosition(index, evt),
           onPointerup: evt => onPointerupPosition(index, evt),
         } : {}"
-        :d="d(flipped ? position[4] : position[3])"
+        :key="index"
+        :d="d(flipped ? pos[4] : pos[3])"
         :data-hexboard-position="index"
         :data-testid="`position-${indexToPosition(index)}`"
         :fill="normalizedOptions.colors[board[index][0]]"
-        :key="index"
       />
 
       <!-- highlighted positions -->
@@ -50,34 +51,34 @@
       />
 
       <!-- labels -->
-      <text
-        v-if="normalizedOptions.labels"
-        v-for="[text, p, positionFlipped], i in labels"
-        v-text="text"
-        dominant-baseline="central"
-        text-anchor="middle"
-        :data-testid="`label-${text}`"
-        :key="`label-${i}`"
-        :style="{
-          fill: getLabelFill(text),
-          fontSize: '.5px',
-          pointerEvents: 'none',
-          userSelect: 'none',
-        }"
-        :x="x(flipped ? positionFlipped[0] : p[0])"
-        :y="y(flipped ? positionFlipped[1] : p[1])"
-      />
+      <template v-if="normalizedOptions.labels">
+        <text
+          v-for="[text, p, positionFlipped], i in labels"
+          v-text="text"
+          :key="`label-${i}`"
+          dominant-baseline="central"
+          text-anchor="middle"
+          :data-testid="`label-${text}`"
+          :style="{
+            fill: getLabelFill(text),
+            fontSize: '.5px',
+            pointerEvents: 'none',
+            userSelect: 'none',
+          }"
+          :x="x(flipped ? positionFlipped[0] : p[0])"
+          :y="y(flipped ? positionFlipped[1] : p[1])"
+        />
+      </template>
 
       <!-- pieces -->
-      <template
-        v-if="currentHexchess"
-        v-for="piece, index in currentHexchess.board">
+      <template v-if="currentHexchess">
         <Component
-          v-if="piece && index !== pointerdownPosition"
+          v-for="{ piece, index } in currentPieces"
           :data-piece-type="piece"
           :data-testid="`piece-${indexToPosition(index)}`"
           :height="pieceSize"
           :is="pieces"
+          :key="`piece-${indexToPosition(index)}`"
           :style="{ pointerEvents: 'none' }"
           :type="piece"
           :width="pieceSize"
@@ -85,15 +86,16 @@
           :y="y(board[index][flipped ? 2 : 1][1] + (pieceSize / 2))"
         />
       </template>
+      
 
       <!-- targets -->
       <circle
         v-for="targetIndex in currentTargets"
+        :key="`target-${indexToPosition(targetIndex)}`"
         :cx="x(board[targetIndex][flipped ? 2 : 1][0])"
         :cy="y(board[targetIndex][flipped ? 2 : 1][1])"
         :data-testid="`target-${indexToPosition(targetIndex)}`"
         :fill="normalizedOptions.targetColor"
-        :key="`target-${indexToPosition(targetIndex)}`"
         :r="0.3"
         :style="{ pointerEvents: 'none' }"
       />
@@ -114,10 +116,11 @@
         width: svgRect.width + 'px',
         willChange: 'transform',
       }"
-      :viewBox="`0 0 ${box} ${box}`">
+      :viewBox="`0 0 ${box} ${box}`"
+    >
       <Component
-        :height="pieceSize"
         :is="pieces"
+        :height="pieceSize"
         :style="{ pointerEvents: 'none' }"
         :type="dragPiece"
         :width="pieceSize"
@@ -135,7 +138,8 @@
         top: promotionRect.top + 'px',
         width: promotionRect.width + 'px',
       }"
-      @pointerup.stop>
+      @pointerup.stop
+    >
       <slot
         name="promotion"
         :b="promotionPieces.b"
@@ -145,7 +149,8 @@
         :promote
         :q="promotionPieces.q"
         :r="promotionPieces.r"
-        :rank="Number(indexToPosition(staging.selected).slice(1))" />
+        :rank="Number(indexToPosition(staging.selected).slice(1))"
+      />
     </div>
   </div>
 </template>
@@ -154,7 +159,7 @@
 import { board, box, defaultOptions, initialPosition, labels, pieceSize, perimeter } from './constants'
 import { computed, h, onMounted, onUnmounted, shallowRef, useTemplateRef, watch, type Component } from 'vue'
 import { d } from './dom'
-import { isPromotionPosition, Hexchess, position as indexToPosition, San, type Color } from '@bedard/hexchess'
+import { isPromotionPosition, Hexchess, position as indexToPosition, San, type Color, type Piece } from '@bedard/hexchess'
 import { x, y } from './geometry'
 import GiocoPieces from './pieces/Gioco.vue'
 import type { HexboardOptions } from './types'
@@ -279,6 +284,17 @@ const currentHexchess = computed(() => {
   }
 
   return Hexchess.init()
+})
+
+/** current pieces */
+const currentPieces = computed(() => {
+  return currentHexchess.value.board.reduce<{ piece: Piece; index: number }[]>((acc, piece, index) => {
+    if (piece) {
+      acc.push({ piece, index })
+    }
+
+    return acc
+  }, [])
 })
 
 /** current selected position */
