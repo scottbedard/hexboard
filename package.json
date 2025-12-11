@@ -34,6 +34,8 @@
   },
   "scripts": {
     "build": "vite build",
+    "build:sandbox": "vite build --config vite.sandbox.config.ts",
+    "build:all": "vite build && vite build --config vite.sandbox.config.ts",
     "dev": "vite",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
