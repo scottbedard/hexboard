@@ -288,7 +288,7 @@ const currentHexchess = computed(() => {
 /** current pieces */
 const currentPieces = computed(() => {
   return currentHexchess.value.board.reduce<{ piece: Piece, index: number }[]>((acc, piece, index) => {
-    if (piece) {
+    if (piece && index !== pointerdownPosition.value) {
       acc.push({ piece, index })
     }
 
@@ -528,6 +528,7 @@ function listen() {
   window.addEventListener('pointerup', onPointerupWindow)
   window.addEventListener('resize', measurePromotionRect)
   window.addEventListener('scroll', measurePromotionRect)
+  window.addEventListener('touchmove', onTouchmoveWindow, { passive: false })
 }
 
 /** measure promotion element rect */
@@ -725,6 +726,13 @@ function onPointermoveWindow(evt: MouseEvent) {
   pointerCoords.value = { x: evt.clientX, y: evt.clientY }
 }
 
+/** touchmove window - prevent scrolling while dragging */
+function onTouchmoveWindow(evt: TouchEvent) {
+  if (pointerdownPosition.value !== null) {
+    evt.preventDefault()
+  }
+}
+
 /** pointerup window */
 function onPointerupWindow() {
   // If staging a promotion, cancel it but keep the original piece selected
@@ -783,5 +791,6 @@ function unlisten() {
   window.removeEventListener('pointerup', onPointerupWindow)
   window.removeEventListener('resize', measurePromotionRect)
   window.removeEventListener('scroll', measurePromotionRect)
+  window.removeEventListener('touchmove', onTouchmoveWindow)
 }
 </script>
