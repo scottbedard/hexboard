@@ -21,20 +21,32 @@ export default ts.config(
         parser: ts.parser,
       },
     },
+  },
+  {
+    files: ['**/*.vue'],
     rules: {
       'vue/attributes-order': ['error', {
         alphabetical: true,
         order: [
           [
-            'CONTENT',
-            'TWO_WAY_BINDING',
-            'LIST_RENDERING',
             'CONDITIONALS',
+            'CONTENT',
+            'LIST_RENDERING',
             'RENDER_MODIFIERS',
             'SLOT',
+            'TWO_WAY_BINDING',
+            'TWO_WAY_BINDING',
+            'OTHER_DIRECTIVES',
           ],
-          'ATTR_STATIC',
-          'ATTR_DYNAMIC',
+          [
+            'ATTR_STATIC',
+            'GLOBAL',
+          ],
+          [
+            'ATTR_DYNAMIC',
+            'DEFINITION',
+            'UNIQUE',
+          ],
           'EVENTS',
         ],
       }],
@@ -42,6 +54,18 @@ export default ts.config(
     },
   },
   {
-    ignores: ['dist/', 'dist-sandbox/', 'node_modules/'],
+    files: ['src/lib/components/hexboard/pieces/*.vue'],
+    rules: {
+      'vue/multi-word-component-names': 'off',
+      'vue/attributes-order': 'off',
+      'vue/max-attributes-per-line': 'off',
+    },
+  },
+  {
+    ignores: [
+      'dist-sandbox/',
+      'dist/',
+      'node_modules/',
+    ],
   },
 )
