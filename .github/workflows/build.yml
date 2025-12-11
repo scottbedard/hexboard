@@ -30,3 +30,9 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Build library
+        run: pnpm build
+
+      - name: Build sandbox
+        run: pnpm build:sandbox
