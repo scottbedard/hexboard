@@ -719,7 +719,7 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
   }
 
   if (props.options.haptics) {
-    navigator.vibrate?.(200)
+    navigator.vibrate?.([200, 100, 200, 100, 200, 100, 200, 100, 200, 100])
   }
 }
 
