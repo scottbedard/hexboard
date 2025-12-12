@@ -718,7 +718,7 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
     svgRect.value = svgEl.value.getBoundingClientRect()
   }
 
-  if (props.options.haptics) {
+  if (normalizedOptions.value.haptics) {
     navigator.vibrate?.([200, 100, 200, 100, 200, 100, 200, 100, 200, 100])
   }
 }
