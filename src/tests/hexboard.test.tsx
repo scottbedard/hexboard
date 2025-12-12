@@ -389,6 +389,7 @@ test('pieces of any color can be selected, but only playing color is draggable',
           v-model:selected={selected.value}
           v-model:targets={targets.value}
         />
+
         <div
           v-text={selected.value}
           data-testid="assertion"
@@ -433,6 +434,7 @@ test('dragging piece off board results in selection only, dragging state resets'
           v-model:selected={selected.value}
           v-model:targets={targets.value}
         />
+
         <div
           v-text={selected.value}
           data-testid="assertion"
@@ -473,16 +475,14 @@ test('drag and drop piece emits move event', async () => {
 
   setup(() => {
     return () => (
-      <>
-        <Hexboard
-          active
-          autoselect
-          playing="w"
-          v-model:selected={selected.value}
-          v-model:targets={targets.value}
-          onMove={onMove}
-        />
-      </>
+      <Hexboard
+        active
+        autoselect
+        playing="w"
+        v-model:selected={selected.value}
+        v-model:targets={targets.value}
+        onMove={onMove}
+      />
     )
   })
 
@@ -515,16 +515,14 @@ test('click to move piece emits move event', async () => {
 
   setup(() => {
     return () => (
-      <>
-        <Hexboard
-          active
-          autoselect
-          playing="w"
-          v-model:selected={selected.value}
-          v-model:targets={targets.value}
-          onMove={onMove}
-        />
-      </>
+      <Hexboard
+        active
+        autoselect
+        playing="w"
+        v-model:selected={selected.value}
+        v-model:targets={targets.value}
+        onMove={onMove}
+      />
     )
   })
 
@@ -555,16 +553,14 @@ test('cannot move piece of other turn color', async () => {
 
   setup(() => {
     return () => (
-      <>
-        <Hexboard
-          active
-          autoselect
-          playing={true}
-          v-model:selected={selected.value}
-          v-model:targets={targets.value}
-          onMove={onMove}
-        />
-      </>
+      <Hexboard
+        active
+        autoselect
+        playing={true}
+        v-model:selected={selected.value}
+        v-model:targets={targets.value}
+        onMove={onMove}
+      />
     )
   })
 
@@ -590,26 +586,24 @@ test('promotion', async () => {
     const hexchess = ref(Hexchess.parse('1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1'))
 
     return () => (
-      <>
-        <Hexboard
-          active
-          autoselect
-          playing="w"
-          hexchess={hexchess.value}
-          onMove={san => hexchess.value.applyMoveUnsafe(san)}
-        >
-          {{
-            promotion: ({ promote }: any) => (
-              <button
-                data-testid="promote"
-                onClick={() => promote('q')}
-              >
-                q
-              </button>
-            ),
-          }}
-        </Hexboard>
-      </>
+      <Hexboard
+        active
+        autoselect
+        playing="w"
+        hexchess={hexchess.value}
+        onMove={san => hexchess.value.applyMoveUnsafe(san)}
+      >
+        {{
+          promotion: ({ promote }: any) => (
+            <button
+              data-testid="promote"
+              onClick={() => promote('q')}
+            >
+              q
+            </button>
+          ),
+        }}
+      </Hexboard>
     )
   })
 
@@ -626,27 +620,25 @@ test('canceled promotion', async () => {
     const hexchess = ref(Hexchess.parse('1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1'))
 
     return () => (
-      <>
-        <Hexboard
-          active
-          autoselect
-          playing="w"
-          hexchess={hexchess.value}
-          v-model:selected={selected.value}
-          onMove={onMove}
-        >
-          {{
-            promotion: ({ cancel }: any) => (
-              <button
-                data-testid="cancel"
-                onClick={cancel}
-              >
-                cancel
-              </button>
-            ),
-          }}
-        </Hexboard>
-      </>
+      <Hexboard
+        active
+        autoselect
+        playing="w"
+        hexchess={hexchess.value}
+        v-model:selected={selected.value}
+        onMove={onMove}
+      >
+        {{
+          promotion: ({ cancel }: any) => (
+            <button
+              data-testid="cancel"
+              onClick={cancel}
+            >
+              cancel
+            </button>
+          ),
+        }}
+      </Hexboard>
     )
   })
 
@@ -679,20 +671,18 @@ test('clicking position during promotion cancels it', async () => {
     const hexchess = ref(Hexchess.parse('1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1'))
 
     return () => (
-      <>
-        <Hexboard
-          active
-          autoselect
-          playing="w"
-          hexchess={hexchess.value}
-          v-model:selected={selected.value}
-          onMove={onMove}
-        >
-          {{
-            promotion: () => <button data-testid="promote">promote</button>,
-          }}
-        </Hexboard>
-      </>
+      <Hexboard
+        active
+        autoselect
+        playing="w"
+        hexchess={hexchess.value}
+        v-model:selected={selected.value}
+        onMove={onMove}
+      >
+        {{
+          promotion: () => <button data-testid="promote">promote</button>,
+        }}
+      </Hexboard>
     )
   })
 
