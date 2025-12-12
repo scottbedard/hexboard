@@ -717,6 +717,10 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
   if (svgEl.value instanceof Element) {
     svgRect.value = svgEl.value.getBoundingClientRect()
   }
+
+  if (props.options.haptics) {
+    navigator.vibrate?.(200)
+  }
 }
 
 /** mouseenter position */

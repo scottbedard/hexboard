@@ -2,6 +2,8 @@
 export interface HexboardOptions {
   /** position colors */
   colors: [string, string, string]
+  /** haptic feedback vibrations */
+  haptics: boolean
   /** color of highlighted position */
   highlightColor: string
   /** color of active label relative to mouseover */
