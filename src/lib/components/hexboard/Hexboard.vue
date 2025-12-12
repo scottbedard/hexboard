@@ -695,6 +695,8 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
     return
   }
 
+  hapticConfirm()
+
   if (props.autoselect) {
     selected.value = index
     targets.value = props.hexchess?.movesFrom(index).map(san => san.to) ?? []
@@ -717,10 +719,6 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
 
   if (svgEl.value instanceof Element) {
     svgRect.value = svgEl.value.getBoundingClientRect()
-  }
-
-  if (normalizedOptions.value.haptics) {
-    hapticConfirm()
   }
 }
 
