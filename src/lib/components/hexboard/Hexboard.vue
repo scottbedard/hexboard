@@ -695,11 +695,13 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
     return
   }
 
-  hapticConfirm()
-
   if (props.autoselect) {
     selected.value = index
     targets.value = props.hexchess?.movesFrom(index).map(san => san.to) ?? []
+
+    if (normalizedOptions.value.haptics) {
+      hapticConfirm()
+    }
   }
 
   if (!isPlayingPosition(index)) {
