@@ -30,8 +30,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src/lib'),
-      '#': resolve(__dirname, 'src/sandbox'),
+      lib: resolve(__dirname, 'src/lib'),
+      sandbox: resolve(__dirname, 'src/sandbox'),
     },
   },
 })
