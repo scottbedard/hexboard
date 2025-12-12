@@ -128,6 +128,7 @@
       />
     </svg>
 
+    <!-- promotion -->
     <div
       v-if="typeof staging.selected === 'number'"
       :style="{
@@ -597,12 +598,22 @@ function onPieceMove(san: San) {
 }
 
 /** pointerup position */
-function onPointerupPosition(index: number, evt: MouseEvent) {
+function onPointerupPosition(index: number, evt: PointerEvent) {
   evt.stopPropagation()
 
   // Check if we're dropping a piece on a valid target (drag and drop)
   if (pointerdownPosition.value !== null) {
-    const san = new San({ from: pointerdownPosition.value, to: index })
+    // On touch devices, pointerup fires on the element where touch started, not where it ended.
+    // Use elementFromPoint to find the actual target position.
+    let targetIndex = index
+    const elementUnderPointer = document.elementFromPoint(evt.clientX, evt.clientY)
+    const posAttr = elementUnderPointer?.getAttribute('data-hexboard-position')
+
+    if (posAttr !== null) {
+      targetIndex = Number(posAttr)
+    }
+
+    const san = new San({ from: pointerdownPosition.value, to: targetIndex })
     attemptMove(san, evt)
 
     // If staging a promotion, don't reset
@@ -701,6 +712,7 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
   }
 
   pointerdownPosition.value = index
+  pointerCoords.value = { x: evt.clientX, y: evt.clientY }
 
   if (svgEl.value instanceof Element) {
     svgRect.value = svgEl.value.getBoundingClientRect()
