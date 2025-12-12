@@ -159,6 +159,7 @@
 import { board, box, defaultOptions, initialPosition, labels, pieceSize, perimeter } from './constants'
 import { computed, h, onMounted, onUnmounted, shallowRef, useTemplateRef, watch, type Component } from 'vue'
 import { d } from './dom'
+import { hapticConfirm } from './haptics'
 import { isPromotionPosition, Hexchess, position as indexToPosition, San, type Color, type Piece } from '@bedard/hexchess'
 import { x, y } from './geometry'
 import GiocoPieces from './pieces/Gioco.vue'
@@ -719,7 +720,7 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
   }
 
   if (normalizedOptions.value.haptics) {
-    navigator.vibrate?.([200, 100, 200, 100, 200, 100, 200, 100, 200, 100])
+    hapticConfirm()
   }
 }
 
