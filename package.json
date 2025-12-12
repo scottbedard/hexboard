@@ -48,7 +48,7 @@
     "dev": "vite",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest --config=vitest.browser.config.ts"
   },
   "license": "MIT",
   "type": "module",

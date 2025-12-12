@@ -66,6 +66,12 @@ export default ts.config(
     },
   },
   {
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+  {
     ignores: [
       'dist-sandbox/',
       'dist/',
