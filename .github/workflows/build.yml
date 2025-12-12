@@ -44,7 +44,12 @@ jobs:
       matrix:
         browser: [chromium, firefox, webkit]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -57,4 +62,4 @@ jobs:
       - name: Test
         env:
           VITEST_BROWSER: ${{ matrix.browser }}
-        run: node hexchess test:ui
+        run: pnpm test
