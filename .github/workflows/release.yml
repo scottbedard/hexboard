@@ -9,7 +9,7 @@ permissions:
   packages: write
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +32,14 @@ jobs:
 
       - name: Build library
         run: pnpm build
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Test
+        env:
+          VITEST_BROWSER: chromium
+        run: pnpm test
 
       - name: Publish package
         run: npm publish
