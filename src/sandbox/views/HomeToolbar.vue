@@ -44,13 +44,21 @@
         v-if="isOpen"
         class="fixed right-0 top-0 z-40 h-full w-72 bg-gray-100 p-4 pt-16 dark:bg-gray-800"
       >
-        <!-- Menu content goes here -->
+        <a
+          class="flex items-center gap-3 rounded-lg p-2 text-gray-700 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-gray-700"
+          href="https://github.com/scottbedard/hexboard"
+          target="_blank"
+        >
+          <Github class="size-5" />
+          <span>Visit Repository</span>
+        </a>
       </div>
     </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
+import Github from 'sandbox/components/icons/Github.vue'
 import Menu from 'sandbox/components/icons/Menu.vue'
 import X from 'sandbox/components/icons/X.vue'
 import { ref } from 'vue'
