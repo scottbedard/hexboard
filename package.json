@@ -38,6 +38,10 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "name": "@bedard/hexboard",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scottbedard/hexboard"
+  },
   "peerDependencies": {
     "@bedard/hexchess": "^2.5.0",
     "vue": "^3.5.0"
