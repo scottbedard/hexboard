@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div
+    class="bg-gray-50 min-h-screen dark:bg-gray-900"
+  >
+    <HomeToolbar />
+
     <Hexboard
       active
       autoselect
@@ -9,10 +13,6 @@
       :playing="true"
       @move="onMove"
     />
-
-    <div class="flex gap-2 p-3">
-      <HomeToolbar />
-    </div>
   </div>
 </template>
 
