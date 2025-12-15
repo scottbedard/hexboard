@@ -63,7 +63,10 @@ export default ts.config(
     },
   },
   {
-    files: ['src/lib/components/hexboard/pieces/*.vue'],
+    files: [
+      'src/lib/components/hexboard/pieces/*.vue',
+      'src/sandbox/components/icons/*.vue',
+    ],
     rules: {
       'vue/attributes-order': 'off',
       'vue/max-attributes-per-line': 'off',
