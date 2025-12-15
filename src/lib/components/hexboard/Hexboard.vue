@@ -190,7 +190,6 @@ import {
 } from './constants'
 import { d } from './dom'
 import { x, y } from './geometry'
-import { hapticConfirm } from './haptics'
 import GiocoPieces from './pieces/Gioco.vue'
 import type { HexboardOptions } from './types'
 
@@ -734,8 +733,6 @@ function cancelPromotion() {
 function onPointerdownPosition(index: number, evt: PointerEvent) {
   evt.preventDefault()
 
-  hapticConfirm()
-
   // Don't start new interactions during promotion
   if (staging.value.hexchess) {
     return
@@ -750,10 +747,6 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
   if (props.autoselect) {
     selected.value = index
     targets.value = props.hexchess?.movesFrom(index).map(san => san.to) ?? []
-
-    if (normalizedOptions.value.haptics) {
-      hapticConfirm()
-    }
   }
 
   if (!isPlayingPosition(index)) {
