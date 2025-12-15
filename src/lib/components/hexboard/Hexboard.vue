@@ -684,6 +684,8 @@ function cancelPromotion() {
 function onPointerdownPosition(index: number, evt: PointerEvent) {
   evt.preventDefault()
 
+  hapticConfirm()
+
   // Don't start new interactions during promotion
   if (staging.value.hexchess) {
     return
