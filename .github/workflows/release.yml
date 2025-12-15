@@ -9,7 +9,11 @@ permissions:
   packages: write
 
 jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
   release:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -26,20 +30,13 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build library
         run: pnpm build
-
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Test
-        env:
-          VITEST_BROWSER: chromium
-        run: pnpm test
 
       - name: Publish package
         run: npm publish
