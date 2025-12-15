@@ -6,10 +6,10 @@
   --font-sans--0: ui-sans-serif;
   --font-sans--1: system-ui;
   --font-sans--2: sans-serif;
-  --font-sans--3: 'Apple Color Emoji';
-  --font-sans--4: 'Segoe UI Emoji';
-  --font-sans--5: 'Segoe UI Symbol';
-  --font-sans--6: 'Noto Color Emoji';
+  --font-sans--3: "Apple Color Emoji";
+  --font-sans--4: "Segoe UI Emoji";
+  --font-sans--5: "Segoe UI Symbol";
+  --font-sans--6: "Noto Color Emoji";
   --font-sans--length: 7;
 
   /* misc colors */

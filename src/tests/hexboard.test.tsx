@@ -37,10 +37,7 @@ test('calls handler on position click', async () => {
 
   setup(() => {
     return () => (
-      <Hexboard
-        active={active.value}
-        onClickPosition={onClickPosition}
-      />
+      <Hexboard active={active.value} onClickPosition={onClickPosition} />
     )
   })
 
@@ -126,29 +123,54 @@ test('labels and label colors', async () => {
   await expect.element(page.getByTestId('label-a')).toBeVisible()
 
   // When no mouseover, all labels should have default labelColor (red)
-  await expect.element(page.getByTestId('label-a')).toHaveStyle({ fill: 'red' })
-  await expect.element(page.getByTestId('label-b')).toHaveStyle({ fill: 'red' })
-  await expect.element(page.getByTestId('label-c')).toHaveStyle({ fill: 'red' })
+  await expect
+    .element(page.getByTestId('label-a'))
+    .toHaveStyle({ fill: 'red' })
+  await expect
+    .element(page.getByTestId('label-b'))
+    .toHaveStyle({ fill: 'red' })
+  await expect
+    .element(page.getByTestId('label-c'))
+    .toHaveStyle({ fill: 'red' })
 
   // No mouse events should be bound when inactive
   await page.getByTestId('position-f6').hover()
   await nextTick()
-  await expect.element(page.getByTestId('label-a')).toHaveStyle({ fill: 'red' })
-  await expect.element(page.getByTestId('label-b')).toHaveStyle({ fill: 'red' })
-  await expect.element(page.getByTestId('label-c')).toHaveStyle({ fill: 'red' })
+  await expect
+    .element(page.getByTestId('label-a'))
+    .toHaveStyle({ fill: 'red' })
+  await expect
+    .element(page.getByTestId('label-b'))
+    .toHaveStyle({ fill: 'red' })
+  await expect
+    .element(page.getByTestId('label-c'))
+    .toHaveStyle({ fill: 'red' })
 
   // When hovering over f6, labels 'f' and '6' should be active (green)
   active.value = true
   await nextTick()
   await page.getByTestId('position-f5').hover()
-  await expect.element(page.getByTestId('label-f')).toHaveStyle({ fill: 'green' })
-  await expect.element(page.getByTestId('label-5').first()).toHaveStyle({ fill: 'green' })
-  await expect.element(page.getByTestId('label-5').last()).toHaveStyle({ fill: 'green' })
+  await expect
+    .element(page.getByTestId('label-f'))
+    .toHaveStyle({ fill: 'green' })
+  await expect
+    .element(page.getByTestId('label-5').first())
+    .toHaveStyle({ fill: 'green' })
+  await expect
+    .element(page.getByTestId('label-5').last())
+    .toHaveStyle({ fill: 'green' })
 
   // Other labels should be inactive (blue)
-  await expect.element(page.getByTestId('label-a')).toHaveStyle({ fill: 'blue' })
-  await expect.element(page.getByTestId('label-1').first()).toHaveStyle({ fill: 'blue' })
-  await expect.element(page.getByTestId('label-1').last()).toHaveStyle({ fill: 'blue' })
+  await expect
+    .element(page.getByTestId('label-a'))
+    .toHaveStyle({ fill: 'blue' })
+
+  await expect
+    .element(page.getByTestId('label-1').first())
+    .toHaveStyle({ fill: 'blue' })
+  await expect
+    .element(page.getByTestId('label-1').last())
+    .toHaveStyle({ fill: 'blue' })
 })
 
 test('targets array controls rendering of target circles', async () => {
@@ -171,18 +193,14 @@ test('targets array controls rendering of target circles', async () => {
   targets.value = [index('a1')]
 
   await expect.element(page.getByTestId('target-a1')).toBeVisible()
-  await expect.element(page.getByTestId('target-a1')).toHaveStyle({ fill: 'red' })
+  await expect
+    .element(page.getByTestId('target-a1'))
+    .toHaveStyle({ fill: 'red' })
 })
 
 test('autoselect targets', async () => {
   setup(() => {
-    return () => (
-      <Hexboard
-        active
-        autoselect
-        playing
-      />
-    )
+    return () => <Hexboard active autoselect playing />
   })
 
   await page.getByTestId('position-f5').click()
@@ -208,10 +226,7 @@ test('select options and logic', async () => {
           }}
         />
 
-        <div
-          v-text={selected.value}
-          data-testid="assertion"
-        />
+        <div v-text={selected.value} data-testid="assertion" />
       </>
     )
   })
@@ -232,7 +247,9 @@ test('select options and logic', async () => {
   await page.getByTestId('position-f5').click()
   await expect(selected.value).toBe(index('f5'))
   await expect.element(page.getByTestId('selected-f5')).toBeVisible()
-  await expect.element(page.getByTestId('selected-f5')).toHaveStyle({ fill: 'red' })
+  await expect
+    .element(page.getByTestId('selected-f5'))
+    .toHaveStyle({ fill: 'red' })
 
   // Clicking an unoccupied position should deselect
   await page.getByTestId('position-a1').click()
@@ -240,7 +257,9 @@ test('select options and logic', async () => {
 
   // Escape should clear selected
   await page.getByTestId('position-f5').click()
-  await expect.element(page.getByTestId('assertion')).toHaveTextContent(index('f5'))
+  await expect
+    .element(page.getByTestId('assertion'))
+    .toHaveTextContent(index('f5'))
   userEvent.keyboard('{Escape}')
   await expect.element(page.getByTestId('assertion')).toBeEmptyDOMElement()
 })
@@ -260,42 +279,56 @@ test('highlight array controls rendering of highlight paths', async () => {
   })
 
   // Initially, no highlight paths should be in the document
-  await expect.element(page.getByTestId('highlight-f6')).not.toBeInTheDocument()
-  await expect.element(page.getByTestId('highlight-a1')).not.toBeInTheDocument()
+  await expect
+    .element(page.getByTestId('highlight-f6'))
+    .not.toBeInTheDocument()
+  await expect
+    .element(page.getByTestId('highlight-a1'))
+    .not.toBeInTheDocument()
 
   // Setting highlight to a single position should render one path
   highlight.value = [index('f6')]
   await nextTick()
   await expect.element(page.getByTestId('highlight-f6')).toBeVisible()
-  await expect.element(page.getByTestId('highlight-f6')).toHaveStyle({ fill: 'pink' })
-  await expect.element(page.getByTestId('highlight-a1')).not.toBeInTheDocument()
+  await expect
+    .element(page.getByTestId('highlight-f6'))
+    .toHaveStyle({ fill: 'pink' })
+  await expect
+    .element(page.getByTestId('highlight-a1'))
+    .not.toBeInTheDocument()
 
   // Setting highlight to multiple positions should render multiple paths
   highlight.value = [index('f6'), index('a1')]
   await nextTick()
   await expect.element(page.getByTestId('highlight-f6')).toBeVisible()
-  await expect.element(page.getByTestId('highlight-f6')).toHaveStyle({ fill: 'pink' })
+  await expect
+    .element(page.getByTestId('highlight-f6'))
+    .toHaveStyle({ fill: 'pink' })
   await expect.element(page.getByTestId('highlight-a1')).toBeVisible()
-  await expect.element(page.getByTestId('highlight-a1')).toHaveStyle({ fill: 'pink' })
+  await expect
+    .element(page.getByTestId('highlight-a1'))
+    .toHaveStyle({ fill: 'pink' })
 
   // Clearing highlight should remove all paths
   highlight.value = []
   await nextTick()
-  await expect.element(page.getByTestId('highlight-f6')).not.toBeInTheDocument()
-  await expect.element(page.getByTestId('highlight-a1')).not.toBeInTheDocument()
+  await expect
+    .element(page.getByTestId('highlight-f6'))
+    .not.toBeInTheDocument()
+  await expect
+    .element(page.getByTestId('highlight-a1'))
+    .not.toBeInTheDocument()
 })
 
 test('cursor shows grab for playable pieces', async () => {
   setup(() => {
-    return () => (
-      <Hexboard
-        active
-        playing
-      />
-    )
+    return () => <Hexboard active playing />
   })
 
-  const svg = page.getByTestId('position-f5').element().closest('svg') as SVGElement
+  const svg = page
+    .getByTestId('position-f5')
+    .element()
+    .closest('svg') as SVGElement
 
   // Hover over a white piece (initial position has white to move)
   // f5 should have a white piece in initial position
@@ -306,18 +339,16 @@ test('cursor shows grab for playable pieces', async () => {
 
 test('cursor shows grab only when user can drag piece', async () => {
   setup(() => {
-    return () => (
-      <Hexboard
-        active
-        playing="w"
-      />
-    )
+    return () => <Hexboard active playing="w" />
   })
 
   // Hover over a white piece when it's white's turn and user is playing white
   // Should show "grab" cursor
   await page.getByTestId('position-f5').hover()
-  const svg = page.getByTestId('position-f5').element().closest('svg') as SVGElement
+  const svg = page
+    .getByTestId('position-f5')
+    .element()
+    .closest('svg') as SVGElement
   await expect(svg).toHaveStyle({ cursor: 'grab' })
 
   // Hover over an empty position when user is only playing white
@@ -333,15 +364,13 @@ test('cursor shows grab only when user can drag piece', async () => {
 
 test('cursor behavior when playing both colors', async () => {
   setup(() => {
-    return () => (
-      <Hexboard
-        active
-        playing
-      />
-    )
+    return () => <Hexboard active playing />
   })
 
-  const svg = page.getByTestId('position-f5').element().closest('svg') as SVGElement
+  const svg = page
+    .getByTestId('position-f5')
+    .element()
+    .closest('svg') as SVGElement
 
   // Initial position is white's turn, so white pieces show "grab"
   await page.getByTestId('position-f5').hover()
@@ -358,17 +387,15 @@ test('cursor behavior when playing both colors', async () => {
 
 test('cursor shows pointer when user is not playing', async () => {
   setup(() => {
-    return () => (
-      <Hexboard
-        active
-        playing={false}
-      />
-    )
+    return () => <Hexboard active playing={false} />
   })
 
   // When playing is false, should show pointer for any piece
   await page.getByTestId('position-f5').hover()
-  const svg = page.getByTestId('position-f5').element().closest('svg') as SVGElement
+  const svg = page
+    .getByTestId('position-f5')
+    .element()
+    .closest('svg') as SVGElement
   await expect(svg).toHaveStyle({ cursor: 'pointer' })
 
   await page.getByTestId('position-f7').hover()
@@ -390,15 +417,15 @@ test('pieces of any color can be selected, but only playing color is draggable',
           v-model:targets={targets.value}
         />
 
-        <div
-          v-text={selected.value}
-          data-testid="assertion"
-        />
+        <div v-text={selected.value} data-testid="assertion" />
       </>
     )
   })
 
-  const svg = page.getByTestId('position-f5').element().closest('svg') as SVGElement
+  const svg = page
+    .getByTestId('position-f5')
+    .element()
+    .closest('svg') as SVGElement
 
   // White piece shows grab cursor (user can drag)
   const whitePiecePosition = page.getByTestId('position-f5')
@@ -413,11 +440,15 @@ test('pieces of any color can be selected, but only playing color is draggable',
   // Both pieces can be selected
   await whitePiecePosition.click()
   await expect.element(page.getByTestId('selected-f5')).toBeVisible()
-  await expect.element(page.getByTestId('assertion')).toHaveTextContent(index('f5'))
+  await expect
+    .element(page.getByTestId('assertion'))
+    .toHaveTextContent(index('f5'))
 
   await blackPiecePosition.click()
   await expect.element(page.getByTestId('selected-b7')).toBeVisible()
-  await expect.element(page.getByTestId('assertion')).toHaveTextContent(index('b7'))
+  await expect
+    .element(page.getByTestId('assertion'))
+    .toHaveTextContent(index('b7'))
 })
 
 test('dragging piece off board results in selection only, dragging state resets', async () => {
@@ -435,10 +466,7 @@ test('dragging piece off board results in selection only, dragging state resets'
           v-model:targets={targets.value}
         />
 
-        <div
-          v-text={selected.value}
-          data-testid="assertion"
-        />
+        <div v-text={selected.value} data-testid="assertion" />
       </>
     )
   })
@@ -446,14 +474,18 @@ test('dragging piece off board results in selection only, dragging state resets'
   const whitePiecePosition = page.getByTestId('position-f5')
 
   // Start dragging the piece (pointerdown)
-  await whitePiecePosition.element().dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+  await whitePiecePosition
+    .element()
+    .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
   await nextTick()
 
   // Verify dragging started - draggable piece SVG should be visible
   await expect.element(page.getByTestId('drag-piece')).toBeVisible()
 
   // Move pointer off the board (simulate pointermove on window)
-  window.dispatchEvent(new PointerEvent('pointermove', { clientX: 0, clientY: 0, bubbles: true }))
+  window.dispatchEvent(
+    new PointerEvent('pointermove', { clientX: 0, clientY: 0, bubbles: true }),
+  )
   await nextTick()
 
   // Release pointer (pointerup on window) - this should reset dragging state
@@ -462,7 +494,9 @@ test('dragging piece off board results in selection only, dragging state resets'
 
   // Verify piece is still selected (autoselect should have set it on mousedown)
   await expect.element(page.getByTestId('selected-f5')).toBeVisible()
-  await expect.element(page.getByTestId('assertion')).toHaveTextContent(index('f5'))
+  await expect
+    .element(page.getByTestId('assertion'))
+    .toHaveTextContent(index('f5'))
 
   // Verify dragging state is reset - draggable piece SVG should no longer exist
   await expect.element(page.getByTestId('drag-piece')).not.toBeInTheDocument()
@@ -490,14 +524,18 @@ test('drag and drop piece emits move event', async () => {
   const toPosition = page.getByTestId('position-f6')
 
   // Start dragging the piece (pointerdown)
-  await fromPosition.element().dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+  await fromPosition
+    .element()
+    .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
   await nextTick()
 
   // Verify dragging started
   await expect.element(page.getByTestId('drag-piece')).toBeVisible()
 
   // Move pointer to target position and release (pointerup)
-  await toPosition.element().dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
+  await toPosition
+    .element()
+    .dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
   await nextTick()
 
   // Verify move event was emitted with correct San object
@@ -583,7 +621,9 @@ test('cannot move piece of other turn color', async () => {
 
 test('promotion', async () => {
   setup(() => {
-    const hexchess = ref(Hexchess.parse('1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1'))
+    const hexchess = ref(
+      Hexchess.parse('1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1'),
+    )
 
     return () => (
       <Hexboard
@@ -595,10 +635,7 @@ test('promotion', async () => {
       >
         {{
           promotion: ({ promote }: any) => (
-            <button
-              data-testid="promote"
-              onClick={() => promote('q')}
-            >
+            <button data-testid="promote" onClick={() => promote('q')}>
               q
             </button>
           ),
@@ -609,7 +646,10 @@ test('promotion', async () => {
 
   await makeMove(page, 'f10f11')
   await page.getByTestId('promote').click()
-  await expect(page.getByTestId('piece-f11')).toHaveAttribute('data-piece-type', 'Q')
+  await expect(page.getByTestId('piece-f11')).toHaveAttribute(
+    'data-piece-type',
+    'Q',
+  )
 })
 
 test('canceled promotion', async () => {
@@ -617,7 +657,9 @@ test('canceled promotion', async () => {
   const onMove = vi.fn()
 
   setup(() => {
-    const hexchess = ref(Hexchess.parse('1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1'))
+    const hexchess = ref(
+      Hexchess.parse('1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1'),
+    )
 
     return () => (
       <Hexboard
@@ -630,10 +672,7 @@ test('canceled promotion', async () => {
       >
         {{
           promotion: ({ cancel }: any) => (
-            <button
-              data-testid="cancel"
-              onClick={cancel}
-            >
+            <button data-testid="cancel" onClick={cancel}>
               cancel
             </button>
           ),
@@ -660,7 +699,9 @@ test('canceled promotion', async () => {
   await expect.element(page.getByTestId('selected-f10')).toBeVisible()
 
   // Pawn should still be at original position
-  await expect.element(page.getByTestId('piece-f10')).toHaveAttribute('data-piece-type', 'P')
+  await expect
+    .element(page.getByTestId('piece-f10'))
+    .toHaveAttribute('data-piece-type', 'P')
 })
 
 test('clicking position during promotion cancels it', async () => {
@@ -668,7 +709,9 @@ test('clicking position during promotion cancels it', async () => {
   const onMove = vi.fn()
 
   setup(() => {
-    const hexchess = ref(Hexchess.parse('1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1'))
+    const hexchess = ref(
+      Hexchess.parse('1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1'),
+    )
 
     return () => (
       <Hexboard
@@ -706,7 +749,9 @@ test('clicking position during promotion cancels it', async () => {
   await expect.element(page.getByTestId('selected-f10')).toBeVisible()
 
   // Pawn should still be at original position
-  await expect.element(page.getByTestId('piece-f10')).toHaveAttribute('data-piece-type', 'P')
+  await expect
+    .element(page.getByTestId('piece-f10'))
+    .toHaveAttribute('data-piece-type', 'P')
 })
 
 test('ignoreTurn allows moving pieces out of turn', async () => {
@@ -735,10 +780,12 @@ test('ignoreTurn allows moving pieces out of turn', async () => {
 
   await makeMove(page, 'f7f6')
   await expect(onMove).toHaveBeenCalledOnce()
-  await expect(onMove).toHaveBeenCalledWith(expect.objectContaining({
-    from: index('f7'),
-    to: index('f6'),
-  }))
+  await expect(onMove).toHaveBeenCalledWith(
+    expect.objectContaining({
+      from: index('f7'),
+      to: index('f6'),
+    }),
+  )
 })
 
 test('dragging piece to non-target position keeps selection', async () => {
@@ -764,7 +811,9 @@ test('dragging piece to non-target position keeps selection', async () => {
   const nonTargetPosition = page.getByTestId('position-a1')
 
   // Start dragging the piece
-  await piecePosition.element().dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+  await piecePosition
+    .element()
+    .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
   await nextTick()
 
   // Verify piece is selected
@@ -772,7 +821,9 @@ test('dragging piece to non-target position keeps selection', async () => {
   await expect(selected.value).toBe(index('f5'))
 
   // Release on a non-target position
-  await nonTargetPosition.element().dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
+  await nonTargetPosition
+    .element()
+    .dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
   await nextTick()
 
   // Piece should still be selected

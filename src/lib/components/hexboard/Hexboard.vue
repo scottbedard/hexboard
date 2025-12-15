@@ -15,14 +15,18 @@
 
       <!-- positions -->
       <path
-        v-for="pos, index in board"
-        v-bind="active ? {
-          onClick: evt => onClickPosition(index, evt),
-          onMouseenter: () => onMouseenter(index),
-          onMouseleave: () => onMouseleave(),
-          onPointerdown: evt => onPointerdownPosition(index, evt),
-          onPointerup: evt => onPointerupPosition(index, evt),
-        } : {}"
+        v-for="(pos, index) in board"
+        v-bind="
+          active
+            ? {
+              onClick: (evt) => onClickPosition(index, evt),
+              onMouseenter: () => onMouseenter(index),
+              onMouseleave: () => onMouseleave(),
+              onPointerdown: (evt) => onPointerdownPosition(index, evt),
+              onPointerup: (evt) => onPointerupPosition(index, evt),
+            }
+            : {}
+        "
         :d="d(flipped ? pos[4] : pos[3])"
         :data-hexboard-position="index"
         :data-testid="`position-${indexToPosition(index)}`"
@@ -53,7 +57,7 @@
       <!-- labels -->
       <template v-if="normalizedOptions.labels">
         <text
-          v-for="[text, p, positionFlipped], i in labels"
+          v-for="([text, p, positionFlipped], i) in labels"
           v-text="text"
           dominant-baseline="central"
           text-anchor="middle"
@@ -82,8 +86,8 @@
           :style="{ pointerEvents: 'none' }"
           :type="piece"
           :width="pieceSize"
-          :x="x(board[index][flipped ? 2 : 1][0] - (pieceSize / 2))"
-          :y="y(board[index][flipped ? 2 : 1][1] + (pieceSize / 2))"
+          :x="x(board[index][flipped ? 2 : 1][0] - pieceSize / 2)"
+          :y="y(board[index][flipped ? 2 : 1][1] + pieceSize / 2)"
         />
       </template>
 
@@ -156,10 +160,34 @@
 </template>
 
 <script lang="ts" setup>
-import { type Color, Hexchess, isPromotionPosition, type Piece, position as indexToPosition, San } from '@bedard/hexchess'
-import { type Component, computed, h, onMounted, onUnmounted, shallowRef, useTemplateRef, watch } from 'vue'
+import {
+  type Color,
+  Hexchess,
+  isPromotionPosition,
+  type Piece,
+  position as indexToPosition,
+  San,
+} from '@bedard/hexchess'
+import {
+  type Component,
+  computed,
+  h,
+  onMounted,
+  onUnmounted,
+  shallowRef,
+  useTemplateRef,
+  watch,
+} from 'vue'
 
-import { board, box, defaultOptions, initialPosition, labels, perimeter, pieceSize } from './constants'
+import {
+  board,
+  box,
+  defaultOptions,
+  initialPosition,
+  labels,
+  perimeter,
+  pieceSize,
+} from './constants'
 import { d } from './dom'
 import { x, y } from './geometry'
 import { hapticConfirm } from './haptics'
@@ -290,13 +318,16 @@ const currentHexchess = computed(() => {
 
 /** current pieces */
 const currentPieces = computed(() => {
-  return currentHexchess.value.board.reduce<{ piece: Piece, index: number }[]>((acc, piece, index) => {
-    if (piece && index !== pointerdownPosition.value) {
-      acc.push({ piece, index })
-    }
+  return currentHexchess.value.board.reduce<{ piece: Piece, index: number }[]>(
+    (acc, piece, index) => {
+      if (piece && index !== pointerdownPosition.value) {
+        acc.push({ piece, index })
+      }
 
-    return acc
-  }, [])
+      return acc
+    },
+    [],
+  )
 })
 
 /** current selected position */
@@ -314,7 +345,11 @@ const cursor = computed(() => {
     return 'grabbing' // global cursor
   }
 
-  if (!props.active || mouseoverPosition.value === null || staging.value.hexchess) {
+  if (
+    !props.active
+    || mouseoverPosition.value === null
+    || staging.value.hexchess
+  ) {
     return undefined
   }
 
@@ -325,11 +360,15 @@ const cursor = computed(() => {
   ) {
     const selectedPiece = currentHexchess.value?.board[selected.value]
     if (selectedPiece) {
-      const selectedPieceColor: Color = selectedPiece === selectedPiece.toLowerCase() ? 'b' : 'w'
+      const selectedPieceColor: Color
+        = selectedPiece === selectedPiece.toLowerCase() ? 'b' : 'w'
       const isSelectedTurn = currentHexchess.value?.turn === selectedPieceColor
 
       // Allow moving if playing both colors, or if it's the selected piece's turn
-      if ((props.playing === true || isSelectedTurn) && isPlayingPosition(selected.value)) {
+      if (
+        (props.playing === true || isSelectedTurn)
+        && isPlayingPosition(selected.value)
+      ) {
         return 'pointer'
       }
     }
@@ -359,8 +398,8 @@ const cursor = computed(() => {
 /** coordinates of drag transformation */
 const dragCoords = computed(() => {
   return {
-    x: pointerCoords.value.x - (svgRect.value.width / 2),
-    y: pointerCoords.value.y - (svgRect.value.height / 2),
+    x: pointerCoords.value.x - svgRect.value.width / 2,
+    y: pointerCoords.value.y - svgRect.value.height / 2,
   }
 })
 
@@ -388,7 +427,9 @@ const mouseoverColor = computed<Color | null>(() => {
     return null
   }
 
-  return mouseoverPiece.value === mouseoverPiece.value.toLowerCase() ? 'b' : 'w'
+  return mouseoverPiece.value === mouseoverPiece.value.toLowerCase()
+    ? 'b'
+    : 'w'
 })
 
 /** piece at mouseover position */
@@ -406,7 +447,8 @@ const promotionPieces = computed(() => {
   const isWhite = piece === piece?.toUpperCase()
 
   const createPiece = (type: string) => {
-    return (attrs: Record<string, unknown>) => h(props.pieces, { ...attrs, type })
+    return (attrs: Record<string, unknown>) =>
+      h(props.pieces, { ...attrs, type })
   }
 
   return {
@@ -434,20 +476,23 @@ onUnmounted(unlisten)
 //
 
 watch(cursor, (val) => {
-  document.body.style.setProperty('cursor', val === 'grabbing' ? 'grabbing' : null)
+  document.body.style.setProperty(
+    'cursor',
+    val === 'grabbing' ? 'grabbing' : null,
+  )
 })
 
-watch(() => props.active, val => val ? listen() : unlisten())
+watch(
+  () => props.active,
+  val => (val ? listen() : unlisten()),
+)
 
 //
 // methods
 //
 
 /** attempt to move piece from source to target position */
-function attemptMove(
-  san: San,
-  evt?: MouseEvent,
-) {
+function attemptMove(san: San, evt?: MouseEvent) {
   // Check if target is valid
   if (!targets.value.includes(san.to)) {
     return
@@ -536,7 +581,8 @@ function listen() {
 
 /** measure promotion element rect */
 function measurePromotionRect() {
-  promotionRect.value = staging.value.promotionEl?.getBoundingClientRect() ?? new DOMRect()
+  promotionRect.value
+    = staging.value.promotionEl?.getBoundingClientRect() ?? new DOMRect()
 }
 
 /** click position */
@@ -608,7 +654,10 @@ function onPointerupPosition(index: number, evt: PointerEvent) {
     // On touch devices, pointerup fires on the element where touch started, not where it ended.
     // Use elementFromPoint to find the actual target position.
     let targetIndex = index
-    const elementUnderPointer = document.elementFromPoint(evt.clientX, evt.clientY)
+    const elementUnderPointer = document.elementFromPoint(
+      evt.clientX,
+      evt.clientY,
+    )
     const posAttr = elementUnderPointer?.getAttribute('data-hexboard-position')
 
     if (posAttr !== null) {

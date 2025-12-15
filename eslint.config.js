@@ -31,36 +31,35 @@ export default ts.config(
     rules: {
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
-      'vue/attributes-order': ['error', {
-        alphabetical: true,
-        order: [
-          [
-            'CONDITIONALS',
-            'CONTENT',
-            'LIST_RENDERING',
-            'RENDER_MODIFIERS',
-            'SLOT',
-            'TWO_WAY_BINDING',
-            'TWO_WAY_BINDING',
-            'OTHER_DIRECTIVES',
+      'vue/attributes-order': [
+        'error',
+        {
+          alphabetical: true,
+          order: [
+            [
+              'CONDITIONALS',
+              'CONTENT',
+              'LIST_RENDERING',
+              'RENDER_MODIFIERS',
+              'SLOT',
+              'TWO_WAY_BINDING',
+              'TWO_WAY_BINDING',
+              'OTHER_DIRECTIVES',
+            ],
+            ['ATTR_SHORTHAND_BOOL', 'ATTR_STATIC', 'GLOBAL'],
+            ['ATTR_DYNAMIC', 'DEFINITION', 'UNIQUE'],
+            'EVENTS',
           ],
-          [
-            'ATTR_SHORTHAND_BOOL',
-            'ATTR_STATIC',
-            'GLOBAL',
-          ],
-          [
-            'ATTR_DYNAMIC',
-            'DEFINITION',
-            'UNIQUE',
-          ],
-          'EVENTS',
-        ],
-      }],
+        },
+      ],
       'vue/multi-word-component-names': 'off',
-      'vue/v-bind-style': ['error', 'shorthand', {
-        sameNameShorthand: 'always',
-      }],
+      'vue/v-bind-style': [
+        'error',
+        'shorthand',
+        {
+          sameNameShorthand: 'always',
+        },
+      ],
     },
   },
   {
@@ -78,10 +77,6 @@ export default ts.config(
     },
   },
   {
-    ignores: [
-      'dist-sandbox/',
-      'dist/',
-      'node_modules/',
-    ],
+    ignores: ['dist-sandbox/', 'dist/', 'node_modules/'],
   },
 )

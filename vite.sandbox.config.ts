@@ -11,10 +11,7 @@ export default defineConfig({
   build: {
     outDir: 'dist-sandbox',
   },
-  plugins: [
-    tailwindcss(),
-    vue(),
-  ],
+  plugins: [tailwindcss(), vue()],
   resolve: {
     alias: {
       lib: resolve(__dirname, 'src/lib'),

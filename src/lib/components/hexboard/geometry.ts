@@ -3,10 +3,7 @@ import type { Vec } from './types'
 
 /** bilinearly interpolate between two points */
 export function bilerp(p1: Vec<2>, p2: Vec<2>, t: number): Vec<2> {
-  return [
-    p1[0] + (t * (p2[0] - p1[0])),
-    p1[1] + (t * (p2[1] - p1[1])),
-  ]
+  return [p1[0] + t * (p2[0] - p1[0]), p1[1] + t * (p2[1] - p1[1])]
 }
 
 /** reflect a path of points across the origin */
@@ -31,8 +28,8 @@ export function pivot(point: Vec<2>, deg: number, distance: number): Vec<2> {
   const rad = radians(deg)
 
   return [
-    (distance * Math.cos(rad)) + point[0],
-    (distance * Math.sin(rad)) + point[1],
+    distance * Math.cos(rad) + point[0],
+    distance * Math.sin(rad) + point[1],
   ]
 }
 
@@ -53,10 +50,10 @@ export function sum(v1: Vec<2>, v2: Vec<2>): Vec<2> {
 
 /** convert cartesian X value to SVG coordinate */
 export function x(n: number) {
-  return (box / 2) + n
+  return box / 2 + n
 }
 
 /** convert cartesian Y value to SVG coordinate */
 export function y(n: number) {
-  return (box / 2) - n
+  return box / 2 - n
 }

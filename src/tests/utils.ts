@@ -5,7 +5,10 @@ import { render } from 'vitest-browser-vue'
 import { nextTick } from 'vue'
 
 /** make a move on the hexboard */
-export async function makeMove(page: BrowserPage, ...sans: string[]): Promise<void> {
+export async function makeMove(
+  page: BrowserPage,
+  ...sans: string[]
+): Promise<void> {
   for (const str of sans) {
     const san = San.from(str)
 

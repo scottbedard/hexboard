@@ -1,13 +1,11 @@
 <template>
-  <div
-    class="bg-gray-50 min-h-screen dark:bg-gray-900"
-  >
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <HomeToolbar />
 
     <Hexboard
       active
       autoselect
-      class="max-w-screen-sm mx-auto"
+      class="mx-auto max-w-screen-sm"
       ignore-turn
       :hexchess
       :playing="true"

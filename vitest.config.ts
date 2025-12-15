@@ -10,21 +10,18 @@ import { defineConfig } from 'vitest/config'
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 // Get browser from environment variable, default to chromium
-const browser = (process.env.VITEST_BROWSER || 'chromium') as 'chromium' | 'firefox' | 'webkit'
+const browser = (process.env.VITEST_BROWSER || 'chromium') as
+  | 'chromium'
+  | 'firefox'
+  | 'webkit'
 
 export default defineConfig({
-  plugins: [
-    tailwindcss(),
-    vue(),
-    vueJsx(),
-  ],
+  plugins: [tailwindcss(), vue(), vueJsx()],
   test: {
     browser: {
       provider: playwright(),
       enabled: true,
-      instances: [
-        { browser },
-      ],
+      instances: [{ browser }],
     },
     environment: 'jsdom',
     testTimeout: 3000,

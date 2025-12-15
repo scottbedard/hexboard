@@ -1,7 +1,8 @@
 /** check if haptics are supported */
-export const supportsHaptics = typeof window === 'undefined'
-  ? false
-  : window.matchMedia('(pointer: coarse)').matches
+export const supportsHaptics
+  = typeof window === 'undefined'
+    ? false
+    : window.matchMedia('(pointer: coarse)').matches
 
 /** trigger haptic feedback */
 function tick() {

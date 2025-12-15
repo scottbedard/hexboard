@@ -1,8 +1,6 @@
 <template>
   <div>
-    <Button>
-      Reset
-    </Button>
+    <Button> Reset </Button>
   </div>
 </template>
 

@@ -7,11 +7,7 @@ test('hello world', async () => {
   const text = ref('hello')
 
   const screen = setup(() => {
-    return () => (
-      <div data-testid="text">
-        {text.value}
-      </div>
-    )
+    return () => <div data-testid="text">{text.value}</div>
   })
 
   await expect.element(screen.getByTestId('text')).toHaveTextContent('hello')
