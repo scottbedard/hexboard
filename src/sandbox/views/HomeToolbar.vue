@@ -2,15 +2,20 @@
   <div>
     <!-- Menu button -->
     <button
+      aria-controls="sidebar-menu"
       class="fixed right-4 top-4 z-50 rounded-lg bg-gray-200 p-2 dark:bg-gray-700"
+      :aria-expanded="isOpen"
+      :aria-label="isOpen ? 'Close menu' : 'Open menu'"
       @click="isOpen = !isOpen"
     >
       <Menu
         v-if="!isOpen"
+        aria-hidden="true"
         class="size-6 text-gray-700 dark:text-gray-200"
       />
       <X
         v-else
+        aria-hidden="true"
         class="size-6 text-gray-700 dark:text-gray-200"
       />
     </button>
@@ -26,6 +31,7 @@
     >
       <div
         v-if="isOpen"
+        aria-hidden="true"
         class="fixed inset-0 z-40 bg-black/50"
         @click="isOpen = false"
       />
@@ -40,19 +46,26 @@
       leave-from-class="translate-x-0"
       leave-to-class="translate-x-full"
     >
-      <div
+      <nav
         v-if="isOpen"
+        aria-label="Main menu"
         class="fixed right-0 top-0 z-40 h-full w-72 bg-gray-100 p-4 pt-16 dark:bg-gray-800"
+        id="sidebar-menu"
+        role="dialog"
       >
         <a
           class="flex items-center gap-3 rounded-lg p-2 text-gray-700 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-gray-700"
           href="https://github.com/scottbedard/hexboard"
+          rel="noopener noreferrer"
           target="_blank"
         >
-          <Github class="size-5" />
+          <Github
+            aria-hidden="true"
+            class="size-5"
+          />
           <span>Visit Repository</span>
         </a>
-      </div>
+      </nav>
     </Transition>
   </div>
 </template>
