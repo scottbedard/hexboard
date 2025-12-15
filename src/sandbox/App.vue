@@ -10,28 +10,16 @@
       @move="onMove"
     />
 
-    <div class="flex gap-2">
-      <button
-        class="bg-gray-200 p-2 rounded"
-        @click="hapticConfirm"
-      >
-        positive
-      </button>
-
-      <button
-        class="bg-gray-200 p-2 rounded"
-        @click="hapticConfirm"
-      >
-        negative
-      </button>
+    <div class="flex gap-2 p-3">
+      <HomeToolbar />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { hapticConfirm } from 'lib/components/hexboard/haptics'
-import { Hexboard } from 'lib/index'
 import { Hexchess, type San } from '@bedard/hexchess'
+import { Hexboard } from 'lib/index'
+import HomeToolbar from 'sandbox/views/HomeToolbar.vue'
 import { ref } from 'vue'
 
 const hexchess = ref(Hexchess.init())

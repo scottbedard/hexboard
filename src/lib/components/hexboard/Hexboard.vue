@@ -156,12 +156,13 @@
 </template>
 
 <script lang="ts" setup>
-import { board, box, defaultOptions, initialPosition, labels, pieceSize, perimeter } from './constants'
-import { computed, h, onMounted, onUnmounted, shallowRef, useTemplateRef, watch, type Component } from 'vue'
+import { type Color, Hexchess, isPromotionPosition, type Piece, position as indexToPosition, San } from '@bedard/hexchess'
+import { type Component, computed, h, onMounted, onUnmounted, shallowRef, useTemplateRef, watch } from 'vue'
+
+import { board, box, defaultOptions, initialPosition, labels, perimeter, pieceSize } from './constants'
 import { d } from './dom'
-import { hapticConfirm } from './haptics'
-import { isPromotionPosition, Hexchess, position as indexToPosition, San, type Color, type Piece } from '@bedard/hexchess'
 import { x, y } from './geometry'
+import { hapticConfirm } from './haptics'
 import GiocoPieces from './pieces/Gioco.vue'
 import type { HexboardOptions } from './types'
 

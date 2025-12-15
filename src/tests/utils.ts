@@ -1,8 +1,8 @@
-import { nextTick } from 'vue'
 import { position } from '@bedard/hexchess'
-import { render } from 'vitest-browser-vue'
 import { San } from '@bedard/hexchess'
 import type { BrowserPage } from 'vitest/browser'
+import { render } from 'vitest-browser-vue'
+import { nextTick } from 'vue'
 
 /** make a move on the hexboard */
 export async function makeMove(page: BrowserPage, ...sans: string[]): Promise<void> {

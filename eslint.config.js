@@ -1,5 +1,6 @@
 import globals from 'globals'
 import js from '@eslint/js'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import stylistic from '@stylistic/eslint-plugin'
 import ts from 'typescript-eslint'
 import vue from 'eslint-plugin-vue'
@@ -23,8 +24,13 @@ export default ts.config(
     },
   },
   {
-    files: ['**/*.vue'],
+    files: ['**/*.ts', '**/*.vue'],
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
     rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
       'vue/attributes-order': ['error', {
         alphabetical: true,
         order: [
