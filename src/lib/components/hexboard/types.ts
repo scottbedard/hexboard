@@ -18,6 +18,18 @@ export interface HexboardOptions {
   selectedColor: string
 }
 
+/** rect */
+export type Rect = {
+  bottom: number
+  height: number
+  left: number
+  right: number
+  top: number
+  width: number
+  x: number
+  y: number
+}
+
 /** uniform tuple of length `T`, `number` by default */
 export type Vec<
   T extends number,

@@ -191,7 +191,7 @@ import {
 import { d } from './dom'
 import { x, y } from './geometry'
 import GiocoPieces from './pieces/Gioco.vue'
-import type { HexboardOptions } from './types'
+import type { HexboardOptions, Rect } from './types'
 
 //
 // props
@@ -263,7 +263,7 @@ const pointerCoords = shallowRef({ x: 0, y: 0 })
 const pointerdownPosition = shallowRef<number | null>(null)
 
 /** rect of promotion anchor element */
-const promotionRect = shallowRef<DOMRect>(new DOMRect())
+const promotionRect = shallowRef(rect())
 
 /** staging display data */
 const staging = shallowRef<{
@@ -284,7 +284,7 @@ const staging = shallowRef<{
 const svgEl = useTemplateRef('svgEl')
 
 /** rect of svg element on pointerdown */
-const svgRect = shallowRef<DOMRect>(new DOMRect())
+const svgRect = shallowRef<Rect>(rect())
 
 /** flag to skip click handling after promotion cancel */
 let skipNextClick = false
@@ -581,7 +581,7 @@ function listen() {
 /** measure promotion element rect */
 function measurePromotionRect() {
   promotionRect.value
-    = staging.value.promotionEl?.getBoundingClientRect() ?? new DOMRect()
+    = staging.value.promotionEl?.getBoundingClientRect() ?? rect()
 }
 
 /** click position */
@@ -673,7 +673,7 @@ function onPointerupPosition(index: number, evt: PointerEvent) {
 
     // Keep selection but reset drag state
     pointerdownPosition.value = null
-    svgRect.value = new DOMRect()
+    svgRect.value = rect()
     return
   }
 
@@ -700,7 +700,7 @@ function onPointerupPosition(index: number, evt: PointerEvent) {
   // If clicking on any piece, keep the selection (it was set in pointerdown)
   if (props.hexchess?.board[index]) {
     pointerdownPosition.value = null
-    svgRect.value = new DOMRect()
+    svgRect.value = rect()
     return
   }
 
@@ -806,7 +806,7 @@ function onPointerupWindow() {
   // If dragging a piece, keep the selection but reset drag state
   if (pointerdownPosition.value !== null) {
     pointerdownPosition.value = null
-    svgRect.value = new DOMRect()
+    svgRect.value = rect()
     return
   }
 
@@ -829,6 +829,20 @@ function promote(promotion: 'n' | 'b' | 'r' | 'q') {
   }
 }
 
+function rect(data: Partial<Rect> = {}): Rect {
+  return {
+    bottom: 0,
+    height: 0,
+    left: 0,
+    right: 0,
+    top: 0,
+    width: 0,
+    x: 0,
+    y: 0,
+    ...data,
+  }
+}
+
 /** reset state */
 function resetState() {
   document.body.style.setProperty('cursor', null)
@@ -841,7 +855,7 @@ function resetState() {
     promotionTo: null,
     selected: null,
   }
-  svgRect.value = new DOMRect()
+  svgRect.value = rect()
   targets.value = []
 }
 
