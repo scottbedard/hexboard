@@ -1,3 +1,7 @@
+# 0.0.5
+
+- Rounded SVG path points for consistent SSR hydration
+
 # 0.0.4
 
 - Removed reference to `DOMRect` browser API
