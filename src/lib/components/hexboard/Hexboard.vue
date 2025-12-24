@@ -829,7 +829,8 @@ function promote(promotion: 'n' | 'b' | 'r' | 'q') {
   }
 }
 
-function rect(data: Partial<Rect> = {}): Rect {
+/** create a `Rect` object */
+function rect(): Rect {
   return {
     bottom: 0,
     height: 0,
@@ -839,7 +840,6 @@ function rect(data: Partial<Rect> = {}): Rect {
     width: 0,
     x: 0,
     y: 0,
-    ...data,
   }
 }
 
