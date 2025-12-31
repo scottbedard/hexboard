@@ -1,3 +1,7 @@
+# 0.0.6
+
+- Replaced CC-licensed piece artwork with simple letter representations. Custom piece assets can be provided via the `pieces` prop
+
 # 0.0.5
 
 - Rounded SVG path points for consistent SSR hydration
