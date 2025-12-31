@@ -1,3 +1,7 @@
+# 0.0.7
+
+- Export `defaultOptions` constant and `HexboardOptions` type
+
 # 0.0.6
 
 - Replaced CC-licensed piece artwork with simple letter representations. Custom piece assets can be provided via the `pieces` prop
