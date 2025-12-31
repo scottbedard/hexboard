@@ -190,7 +190,7 @@ import {
 } from './constants'
 import { d } from './dom'
 import { x, y } from './geometry'
-import GiocoPieces from './pieces/Gioco.vue'
+import LetterPiece from './pieces/Letter.vue'
 import type { HexboardOptions, Rect } from './types'
 
 //
@@ -218,7 +218,7 @@ const props = withDefaults(
     highlight: () => [],
     ignoreTurn: false,
     options: () => ({}),
-    pieces: () => GiocoPieces,
+    pieces: () => LetterPiece,
     playing: false,
     position: initialPosition,
   },
