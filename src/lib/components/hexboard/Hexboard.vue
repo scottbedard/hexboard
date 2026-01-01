@@ -69,8 +69,8 @@
             pointerEvents: 'none',
             userSelect: 'none',
           }"
-          :x="x(flipped ? positionFlipped[0] : p[0])"
-          :y="y(flipped ? positionFlipped[1] : p[1])"
+          :x="rounded(x(flipped ? positionFlipped[0] : p[0]))"
+          :y="rounded(y(flipped ? positionFlipped[1] : p[1]))"
         />
       </template>
 
@@ -86,16 +86,16 @@
           :style="{ pointerEvents: 'none' }"
           :type="piece"
           :width="pieceSize"
-          :x="x(board[index][flipped ? 2 : 1][0] - pieceSize / 2)"
-          :y="y(board[index][flipped ? 2 : 1][1] + pieceSize / 2)"
+          :x="rounded(x(board[index][flipped ? 2 : 1][0] - pieceSize / 2))"
+          :y="rounded(y(board[index][flipped ? 2 : 1][1] + pieceSize / 2))"
         />
       </template>
 
       <!-- targets -->
       <circle
         v-for="targetIndex in currentTargets"
-        :cx="x(board[targetIndex][flipped ? 2 : 1][0])"
-        :cy="y(board[targetIndex][flipped ? 2 : 1][1])"
+        :cx="rounded(x(board[targetIndex][flipped ? 2 : 1][0]))"
+        :cy="rounded(y(board[targetIndex][flipped ? 2 : 1][1]))"
         :data-testid="`target-${indexToPosition(targetIndex)}`"
         :fill="normalizedOptions.targetColor"
         :key="`target-${indexToPosition(targetIndex)}`"
@@ -127,8 +127,8 @@
         :style="{ pointerEvents: 'none' }"
         :type="dragPiece"
         :width="pieceSize"
-        :x="x(pieceSize / -2)"
-        :y="y(pieceSize / 2)"
+        :x="rounded(x(pieceSize / -2))"
+        :y="rounded(y(pieceSize / 2))"
       />
     </svg>
 
@@ -188,7 +188,7 @@ import {
   perimeter,
   pieceSize,
 } from './constants'
-import { d } from './dom'
+import { d, rounded } from './dom'
 import { x, y } from './geometry'
 import LetterPiece from './pieces/Letter.vue'
 import type { HexboardOptions, Rect } from './types'
