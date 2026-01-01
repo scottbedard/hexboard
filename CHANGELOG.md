@@ -1,3 +1,7 @@
+# 0.0.8
+
+- Round SVG coordinates for better SSR hydration
+
 # 0.0.7
 
 - Export `defaultOptions` constant and `HexboardOptions` type
