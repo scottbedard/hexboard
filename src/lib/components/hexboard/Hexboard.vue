@@ -2,6 +2,7 @@
   <div>
     <svg
       xmlns="http://www.w3.org/2000/svg"
+      :data-fen="currentHexchess.toString()"
       ref="svgEl"
       :style="{ cursor }"
       :viewBox="`0 0 ${box} ${box}`"
@@ -735,6 +736,12 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
 
   // Don't start new interactions during promotion
   if (staging.value.hexchess) {
+    return
+  }
+
+  // If clicking on a valid target for the selected piece, don't re-select
+  // (the move will be handled in onPointerupPosition/onClickPosition)
+  if (selected.value !== null && targets.value.includes(index)) {
     return
   }
 

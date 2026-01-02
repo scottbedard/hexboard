@@ -830,3 +830,25 @@ test('dragging piece to non-target position keeps selection', async () => {
   await expect.element(page.getByTestId('selected-f5')).toBeVisible()
   await expect(selected.value).toBe(index('f5'))
 })
+
+test('click capture', async () => {
+  const hexchess = ref(
+    Hexchess.parse('b/qbk/n1b1n/r5r/ppp1ppppp/11/4pP5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w e6 0 2'),
+  )
+
+  setup(() => {
+    return () => (
+      <Hexboard
+        active
+        autoselect
+        playing={true}
+        hexchess={hexchess.value}
+        onMove={san => hexchess.value.applyMoveUnsafe(san)}
+      />
+    )
+  })
+
+  await makeMove(page, 'f5e5')
+
+  await expect(hexchess.value.toString()).toBe('b/qbk/n1b1n/r5r/ppp1ppppp/11/4P6/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 b - 0 2')
+})
