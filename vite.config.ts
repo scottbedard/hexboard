@@ -27,7 +27,24 @@ export default defineConfig({
       rollupTypes: true,
     }),
     tailwindcss(),
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          nodeTransforms: [
+            (node) => {
+              // remove data-testid attributes from production build
+              if (node.type === 1 && node.props) {
+                node.props = node.props
+                  .filter(prop =>
+                    !(prop.type === 6 && prop.name === 'data-testid')
+                    && !(prop.type === 7 && prop.name === 'bind' && prop.arg?.type === 4 && prop.arg.content === 'data-testid'),
+                  )
+              }
+            },
+          ],
+        },
+      },
+    }),
   ],
   resolve: {
     alias: {
