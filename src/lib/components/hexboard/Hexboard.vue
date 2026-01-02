@@ -738,6 +738,12 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
     return
   }
 
+  // If clicking on a valid target for the selected piece, don't re-select
+  // (the move will be handled in onPointerupPosition/onClickPosition)
+  if (selected.value !== null && targets.value.includes(index)) {
+    return
+  }
+
   const piece = props.hexchess?.board[index]
 
   if (!piece) {
