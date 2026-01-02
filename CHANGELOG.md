@@ -1,3 +1,8 @@
+# 0.0.9
+
+- Fix click-move capturing (https://github.com/scottbedard/hexboard/issues/1)
+- Remove `data-testid` from built files
+
 # 0.0.8
 
 - Round SVG coordinates for better SSR hydration
