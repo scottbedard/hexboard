@@ -2,7 +2,6 @@
   <div>
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      :data-fen="currentHexchess.toString()"
       ref="svgEl"
       :style="{ cursor }"
       :viewBox="`0 0 ${box} ${box}`"
