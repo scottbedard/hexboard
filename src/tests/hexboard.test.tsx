@@ -3,7 +3,7 @@ import { expect, test, vi } from 'vitest'
 import { Hexboard } from '../lib'
 import { Hexchess } from '@bedard/hexchess'
 import { index, San } from '@bedard/hexchess'
-import { makeMove, setup } from './utils'
+import { dragMove, clickMove, setup } from './utils'
 import { page } from 'vitest/browser'
 import { ref, nextTick } from 'vue'
 import { userEvent } from 'vitest/browser'
@@ -520,23 +520,7 @@ test('drag and drop piece emits move event', async () => {
     )
   })
 
-  const fromPosition = page.getByTestId('position-f5')
-  const toPosition = page.getByTestId('position-f6')
-
-  // Start dragging the piece (pointerdown)
-  await fromPosition
-    .element()
-    .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
-  await nextTick()
-
-  // Verify dragging started
-  await expect.element(page.getByTestId('drag-piece')).toBeVisible()
-
-  // Move pointer to target position and release (pointerup)
-  await toPosition
-    .element()
-    .dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
-  await nextTick()
+  await dragMove(page, 'f5f6')
 
   // Verify move event was emitted with correct San object
   await expect(onMove).toHaveBeenCalledOnce()
@@ -644,7 +628,7 @@ test('promotion', async () => {
     )
   })
 
-  await makeMove(page, 'f10f11')
+  await clickMove(page, 'f10f11')
   await page.getByTestId('promote').click()
   await expect(page.getByTestId('piece-f11')).toHaveAttribute(
     'data-piece-type',
@@ -682,7 +666,7 @@ test('canceled promotion', async () => {
   })
 
   // Move pawn to promotion square
-  await makeMove(page, 'f10f11')
+  await clickMove(page, 'f10f11')
 
   // Promotion UI should be visible
   await expect.element(page.getByTestId('cancel')).toBeVisible()
@@ -730,7 +714,7 @@ test('clicking position during promotion cancels it', async () => {
   })
 
   // Move pawn to promotion square
-  await makeMove(page, 'f10f11')
+  await clickMove(page, 'f10f11')
 
   // Promotion UI should be visible
   await expect.element(page.getByTestId('promote')).toBeVisible()
@@ -771,14 +755,14 @@ test('ignoreTurn allows moving pieces out of turn', async () => {
   })
 
   // Initial position is white's turn, try to move black's pawn without ignoreTurn
-  await makeMove(page, 'f7f6')
+  await clickMove(page, 'f7f6')
   await expect(onMove).not.toHaveBeenCalled()
 
   // Enable ignoreTurn and try again
   ignoreTurn.value = true
   await nextTick()
 
-  await makeMove(page, 'f7f6')
+  await clickMove(page, 'f7f6')
   await expect(onMove).toHaveBeenCalledOnce()
   await expect(onMove).toHaveBeenCalledWith(
     expect.objectContaining({
@@ -791,6 +775,7 @@ test('ignoreTurn allows moving pieces out of turn', async () => {
 test('dragging piece to non-target position keeps selection', async () => {
   const selected = ref<number | null>(null)
   const targets = ref<number[]>([])
+  const onMove = vi.fn()
 
   setup(() => {
     return () => (
@@ -801,34 +786,21 @@ test('dragging piece to non-target position keeps selection', async () => {
           playing="w"
           v-model:selected={selected.value}
           v-model:targets={targets.value}
+          onMove={onMove}
         />
         <div data-testid="selected-value" v-text={selected.value} />
       </>
     )
   })
 
-  const piecePosition = page.getByTestId('position-f5')
-  const nonTargetPosition = page.getByTestId('position-a1')
-
-  // Start dragging the piece
-  await piecePosition
-    .element()
-    .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
-  await nextTick()
-
-  // Verify piece is selected
-  await expect.element(page.getByTestId('selected-f5')).toBeVisible()
-  await expect(selected.value).toBe(index('f5'))
-
-  // Release on a non-target position
-  await nonTargetPosition
-    .element()
-    .dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
-  await nextTick()
+  await dragMove(page, 'f5a1')
 
   // Piece should still be selected
   await expect.element(page.getByTestId('selected-f5')).toBeVisible()
   await expect(selected.value).toBe(index('f5'))
+
+  // No move should have been emitted
+  await expect(onMove).not.toHaveBeenCalled()
 })
 
 test('click capture', async () => {
@@ -848,7 +820,29 @@ test('click capture', async () => {
     )
   })
 
-  await makeMove(page, 'f5e5')
+  await clickMove(page, 'f5e5')
+
+  await expect(hexchess.value.toString()).toBe('b/qbk/n1b1n/r5r/ppp1ppppp/11/4P6/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 b - 0 2')
+})
+
+test('drag capture', async () => {
+  const hexchess = ref(
+    Hexchess.parse('b/qbk/n1b1n/r5r/ppp1ppppp/11/4pP5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w e6 0 2'),
+  )
+
+  setup(() => {
+    return () => (
+      <Hexboard
+        active
+        autoselect
+        playing={true}
+        hexchess={hexchess.value}
+        onMove={san => hexchess.value.applyMoveUnsafe(san)}
+      />
+    )
+  })
+
+  await dragMove(page, 'f5e5')
 
   await expect(hexchess.value.toString()).toBe('b/qbk/n1b1n/r5r/ppp1ppppp/11/4P6/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 b - 0 2')
 })
