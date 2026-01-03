@@ -172,6 +172,7 @@ import {
   type Component,
   computed,
   h,
+  onBeforeMount,
   onMounted,
   onUnmounted,
   shallowRef,
@@ -462,6 +463,12 @@ const promotionPieces = computed(() => {
 // lifecycle
 //
 
+onBeforeMount(() => {
+  if (props.autoselect) {
+    selectCurrentTargets()
+  }
+})
+
 onMounted(() => {
   if (props.active) {
     listen()
@@ -485,6 +492,8 @@ watch(
   () => props.active,
   val => (val ? listen() : unlisten()),
 )
+
+watch(selected, selectCurrentTargets)
 
 //
 // methods
@@ -537,17 +546,25 @@ function attemptMove(san: San, evt?: MouseEvent) {
   }
 }
 
-/** check if user is playing the color at a position */
-function isPlayingPosition(index: number): boolean {
-  const piece = props.hexchess?.board[index]
+/** cancel promotion and restore original selection */
+function cancelPromotion() {
+  const from = staging.value.promotionFrom
 
-  if (!piece) {
-    return false
+  staging.value = {
+    hexchess: null,
+    promotionEl: null,
+    promotionFrom: null,
+    promotionTo: null,
+    selected: null,
   }
 
-  const pieceColor: Color = piece === piece.toLowerCase() ? 'b' : 'w'
+  // Keep the original piece selected
+  if (typeof from === 'number') {
+    selected.value = from
+  }
 
-  return props.playing === true || props.playing === pieceColor
+  pointerdownPosition.value = null
+  skipNextClick = true
 }
 
 /** get fill color of label */
@@ -564,6 +581,19 @@ function getLabelFill(text: string) {
   }
 
   return normalizedOptions.value.labelInactiveColor
+}
+
+/** check if user is playing the color at a position */
+function isPlayingPosition(index: number): boolean {
+  const piece = props.hexchess?.board[index]
+
+  if (!piece) {
+    return false
+  }
+
+  const pieceColor: Color = piece === piece.toLowerCase() ? 'b' : 'w'
+
+  return props.playing === true || props.playing === pieceColor
 }
 
 /** listen for events */
@@ -614,7 +644,6 @@ function onClickPosition(index: number, evt: MouseEvent) {
   // If autoselect is enabled and clicking an unoccupied position, deselect
   if (props.autoselect && !props.hexchess.board[index]) {
     selected.value = null
-    targets.value = []
   }
 
   emit('clickPosition', index)
@@ -632,9 +661,18 @@ function onKeyupWindow(evt: KeyboardEvent) {
     // Otherwise deselect if autoselect is enabled
     if (props.autoselect) {
       selected.value = null
-      targets.value = []
     }
   }
+}
+
+/** mouseenter position */
+function onMouseenter(index: number) {
+  mouseoverPosition.value = index
+}
+
+/** mouseleave position */
+function onMouseleave() {
+  mouseoverPosition.value = null
 }
 
 /** handle piece move */
@@ -642,6 +680,60 @@ function onPieceMove(san: San) {
   emit('move', san)
 
   resetState()
+}
+
+/** pointerdown on position */
+function onPointerdownPosition(index: number, evt: PointerEvent) {
+  evt.preventDefault()
+
+  // Don't start new interactions during promotion
+  if (staging.value.hexchess) {
+    return
+  }
+
+  // If clicking on a valid target for the selected piece, don't re-select
+  // (the move will be handled in onPointerupPosition/onClickPosition)
+  if (selected.value !== null && targets.value.includes(index)) {
+    return
+  }
+
+  const piece = props.hexchess?.board[index]
+
+  if (!piece) {
+    return
+  }
+
+  if (props.autoselect) {
+    selected.value = index
+  }
+
+  if (!isPlayingPosition(index)) {
+    return
+  }
+
+  // Only allow dragging if it's the piece's turn (or ignoreTurn is true)
+  const pieceColor: Color = piece === piece.toLowerCase() ? 'b' : 'w'
+  const isCurrentTurn = props.hexchess?.turn === pieceColor
+
+  if (!props.ignoreTurn && !isCurrentTurn) {
+    return
+  }
+
+  pointerdownPosition.value = index
+  pointerCoords.value = { x: evt.clientX, y: evt.clientY }
+
+  if (svgEl.value instanceof Element) {
+    svgRect.value = svgEl.value.getBoundingClientRect()
+  }
+}
+
+/** pointermove window */
+function onPointermoveWindow(evt: MouseEvent) {
+  if (!props.active) {
+    return
+  }
+
+  pointerCoords.value = { x: evt.clientX, y: evt.clientY }
 }
 
 /** pointerup position */
@@ -707,100 +799,6 @@ function onPointerupPosition(index: number, evt: PointerEvent) {
   resetState()
 }
 
-/** cancel promotion and restore original selection */
-function cancelPromotion() {
-  const from = staging.value.promotionFrom
-
-  staging.value = {
-    hexchess: null,
-    promotionEl: null,
-    promotionFrom: null,
-    promotionTo: null,
-    selected: null,
-  }
-
-  // Keep the original piece selected
-  if (typeof from === 'number') {
-    selected.value = from
-    targets.value = props.hexchess.movesFrom(from).map(san => san.to) ?? []
-  }
-
-  pointerdownPosition.value = null
-  skipNextClick = true
-}
-
-/** pointerdown on position */
-function onPointerdownPosition(index: number, evt: PointerEvent) {
-  evt.preventDefault()
-
-  // Don't start new interactions during promotion
-  if (staging.value.hexchess) {
-    return
-  }
-
-  // If clicking on a valid target for the selected piece, don't re-select
-  // (the move will be handled in onPointerupPosition/onClickPosition)
-  if (selected.value !== null && targets.value.includes(index)) {
-    return
-  }
-
-  const piece = props.hexchess?.board[index]
-
-  if (!piece) {
-    return
-  }
-
-  if (props.autoselect) {
-    selected.value = index
-    targets.value = props.hexchess?.movesFrom(index).map(san => san.to) ?? []
-  }
-
-  if (!isPlayingPosition(index)) {
-    return
-  }
-
-  // Only allow dragging if it's the piece's turn (or ignoreTurn is true)
-  const pieceColor: Color = piece === piece.toLowerCase() ? 'b' : 'w'
-  const isCurrentTurn = props.hexchess?.turn === pieceColor
-
-  if (!props.ignoreTurn && !isCurrentTurn) {
-    return
-  }
-
-  pointerdownPosition.value = index
-  pointerCoords.value = { x: evt.clientX, y: evt.clientY }
-
-  if (svgEl.value instanceof Element) {
-    svgRect.value = svgEl.value.getBoundingClientRect()
-  }
-}
-
-/** mouseenter position */
-function onMouseenter(index: number) {
-  mouseoverPosition.value = index
-}
-
-/** mouseleave position */
-function onMouseleave() {
-  mouseoverPosition.value = null
-}
-
-/** pointermove window */
-function onPointermoveWindow(evt: MouseEvent) {
-  if (!props.active) {
-    return
-  }
-
-  pointerCoords.value = { x: evt.clientX, y: evt.clientY }
-}
-
-/** touchmove window - prevent scrolling while dragging */
-function onTouchmoveWindow(evt: TouchEvent) {
-  if (pointerdownPosition.value !== null) {
-    evt.preventDefault()
-  }
-}
-
 /** pointerup window */
 function onPointerupWindow() {
   // If staging a promotion, cancel it but keep the original piece selected
@@ -817,6 +815,13 @@ function onPointerupWindow() {
   }
 
   resetState()
+}
+
+/** touchmove window - prevent scrolling while dragging */
+function onTouchmoveWindow(evt: TouchEvent) {
+  if (pointerdownPosition.value !== null) {
+    evt.preventDefault()
+  }
 }
 
 /** promote piece */
@@ -863,6 +868,16 @@ function resetState() {
   }
   svgRect.value = rect()
   targets.value = []
+}
+
+/** select current targets */
+function selectCurrentTargets() {
+  if (typeof selected.value === 'number') {
+    targets.value = props.hexchess?.movesFrom(selected.value).map(san => san.to) ?? []
+  }
+  else {
+    targets.value = []
+  }
 }
 
 /** stop listening for events */

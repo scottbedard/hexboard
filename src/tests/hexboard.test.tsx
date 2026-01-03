@@ -846,3 +846,26 @@ test('drag capture', async () => {
 
   await expect(hexchess.value.toString()).toBe('b/qbk/n1b1n/r5r/ppp1ppppp/11/4P6/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 b - 0 2')
 })
+
+test('updates targets when autoselect is true', async () => {
+  const selected = ref<number | null>(index('f5'))
+  const targets = ref<number[]>([])
+
+  setup(() => {
+    return () => (
+      <Hexboard
+        v-model:selected={selected.value}
+        v-model:targets={targets.value}
+        autoselect
+      />
+    )
+  })
+
+  await expect(targets.value).toEqual([index('f6')])
+
+  selected.value = index('e4')
+
+  await nextTick()
+
+  await expect(targets.value).toEqual([index('e5'), index('e6')])
+})
