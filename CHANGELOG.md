@@ -1,3 +1,7 @@
+# 0.0.10
+
+- Fix autoselect not updating targets (https://github.com/scottbedard/hexboard/issues/3)
+
 # 0.0.9
 
 - Fix click-move capturing (https://github.com/scottbedard/hexboard/issues/1)
