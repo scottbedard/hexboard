@@ -231,6 +231,8 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   clickPosition: [position: number]
+  dragendPosition: [position: number]
+  dragstartPosition: [position: number]
   move: [san: San]
 }>()
 
@@ -725,6 +727,8 @@ function onPointerdownPosition(index: number, evt: PointerEvent) {
   if (svgEl.value instanceof Element) {
     svgRect.value = svgEl.value.getBoundingClientRect()
   }
+
+  emit('dragstartPosition', index)
 }
 
 /** pointermove window */
@@ -754,6 +758,8 @@ function onPointerupPosition(index: number, evt: PointerEvent) {
     if (posAttr !== null) {
       targetIndex = Number(posAttr)
     }
+
+    emit('dragendPosition', targetIndex)
 
     const san = new San({ from: pointerdownPosition.value, to: targetIndex })
     attemptMove(san, evt)

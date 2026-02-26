@@ -502,6 +502,72 @@ test('dragging piece off board results in selection only, dragging state resets'
   await expect.element(page.getByTestId('drag-piece')).not.toBeInTheDocument()
 })
 
+test('drag emits dragstartPosition and dragendPosition', async () => {
+  const selected = ref<number | null>(null)
+  const targets = ref<number[]>([])
+  const onDragstartPosition = vi.fn()
+  const onDragendPosition = vi.fn()
+
+  setup(() => {
+    return () => (
+      <Hexboard
+        active
+        autoselect
+        playing="w"
+        v-model:selected={selected.value}
+        v-model:targets={targets.value}
+        onDragendPosition={onDragendPosition}
+        onDragstartPosition={onDragstartPosition}
+      />
+    )
+  })
+
+  await dragMove(page, 'f5f6')
+
+  await expect(onDragstartPosition).toHaveBeenCalledOnce()
+  await expect(onDragstartPosition).toHaveBeenCalledWith(index('f5'))
+  await expect(onDragendPosition).toHaveBeenCalledOnce()
+  await expect(onDragendPosition).toHaveBeenCalledWith(index('f6'))
+})
+
+test('drag start emits dragstartPosition; release off board does not emit dragendPosition', async () => {
+  const selected = ref<number | null>(null)
+  const targets = ref<number[]>([])
+  const onDragstartPosition = vi.fn()
+  const onDragendPosition = vi.fn()
+
+  setup(() => {
+    return () => (
+      <Hexboard
+        active
+        autoselect
+        playing="w"
+        v-model:selected={selected.value}
+        v-model:targets={targets.value}
+        onDragendPosition={onDragendPosition}
+        onDragstartPosition={onDragstartPosition}
+      />
+    )
+  })
+
+  const whitePiecePosition = page.getByTestId('position-f5')
+
+  await whitePiecePosition
+    .element()
+    .dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+  await nextTick()
+
+  await expect(onDragstartPosition).toHaveBeenCalledOnce()
+  await expect(onDragstartPosition).toHaveBeenCalledWith(index('f5'))
+  await expect(onDragendPosition).not.toHaveBeenCalled()
+
+  window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
+  await nextTick()
+
+  await expect(onDragstartPosition).toHaveBeenCalledOnce()
+  await expect(onDragendPosition).not.toHaveBeenCalled()
+})
+
 test('drag and drop piece emits move event', async () => {
   const selected = ref<number | null>(null)
   const targets = ref<number[]>([])
