@@ -1,3 +1,7 @@
+# 0.0.11
+
+- Add `dragstart-position` and `dragend-position` events
+
 # 0.0.10
 
 - Fix autoselect not updating targets (https://github.com/scottbedard/hexboard/issues/3)
